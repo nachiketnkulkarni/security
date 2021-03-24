@@ -1,10 +1,12 @@
+require("dotenv").config();
+
 const express = require("express");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const encrypt = require("mongoose-encryption");
 
 const app = express();
-mongoose.connect("mongodb://localhost:27017/userDB", {
+mongoose.connect(process.env.DB_HOST, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -14,8 +16,10 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 
-var secret = "ThisIsASecretString";
-userSchema.plugin(encrypt, { secret: secret, encryptedField: "password" });
+userSchema.plugin(encrypt, {
+  secret: process.env.SECRET,
+  encryptedField: "password",
+});
 
 const USER = mongoose.model("user", userSchema);
 
@@ -60,7 +64,7 @@ app
       email: req.body.username,
       password: req.body.password,
     });
-    console.log(req.body);
+    // console.log(req.body);
 
     user.save((err) => {
       if (!err) {
