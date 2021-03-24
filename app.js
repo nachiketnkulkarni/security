@@ -1,6 +1,7 @@
 const express = require("express");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const encrypt = require("mongoose-encryption");
 
 const app = express();
 mongoose.connect("mongodb://localhost:27017/userDB", {
@@ -8,10 +9,13 @@ mongoose.connect("mongodb://localhost:27017/userDB", {
   useUnifiedTopology: true,
 });
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   email: String,
   password: String,
 });
+
+var secret = "ThisIsASecretString";
+userSchema.plugin(encrypt, { secret: secret, encryptedField: "password" });
 
 const USER = mongoose.model("user", userSchema);
 
