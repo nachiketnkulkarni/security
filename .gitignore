@@ -1,4 +1,4 @@
-/node-module
+/node-modules
 npm-debug.log
 .DS_Store
 /*.env
